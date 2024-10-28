@@ -13,10 +13,14 @@ import os
 # Path to store model metadata (in local file or GCS)
 metadata_file = 'best_model_metadata.json'
 
-# Function to save the new best model
-def save_model(model, mse, r2, model_name):
-    # Save the model to a file
-    joblib.dump(model, f'{model_name}.pkl')
+# Save the XGBoost model using XGBoost's save_model method (JSON format)
+def save_model(model, mse, r2, model_name, is_xgboost=False):
+    if is_xgboost:
+        # Save using XGBoost's native save_model method
+        model.get_booster().save_model(f'{model_name}.json')
+    else:
+        # Save using joblib for Random Forest
+        joblib.dump(model, f'{model_name}.pkl')
 
     # Save the new best metrics to metadata
     metadata = {
@@ -26,6 +30,7 @@ def save_model(model, mse, r2, model_name):
     }
     with open(metadata_file, 'w') as f:
         json.dump(metadata, f)
+
 
 # Function to load the current best model's performance
 def load_current_best():
@@ -43,8 +48,16 @@ current_best = load_current_best()
 print(torch.cuda.is_available())  # True if GPU is available
 print(torch.cuda.current_device())  # Shows which GPU is being used
 
-# Create a tensor and move it to GPU
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Check if GPU is available and proceed accordingly
+if torch.cuda.is_available():
+    print(torch.cuda.current_device())  # Shows which GPU is being used
+    # Create a tensor and move it to GPU
+    device = torch.device("cuda")
+else:
+    print("No GPU found, using CPU.")
+    device = torch.device("cpu")
+
+# Move tensor to the available device (GPU or CPU)
 x = torch.rand(5, 3).to(device)
 print(x)
 
@@ -109,7 +122,7 @@ print(f"Best XGBoost R²: {best_r2_xgb}")
 # Compare the new XGBoost model's performance with the current best model
 if best_mse_xgb < current_best['best_mse']:
     print(f"New XGBoost model is better. MSE: {best_mse_xgb}, R²: {best_r2_xgb}")
-    save_model(best_xgb_model, best_mse_xgb, best_r2_xgb, 'xgboost_model')
+    save_model(best_xgb_model, best_mse_xgb, best_r2_xgb, 'xgboost_model', is_xgboost=True)
 
 # Hyperparameter tuning for Random Forest (for comparison purposes)
 param_grid_rf = {

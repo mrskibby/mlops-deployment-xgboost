@@ -1,23 +1,34 @@
-from flask import Flask, request, jsonify
 import xgboost as xgb
+from flask import Flask, request, jsonify
 import pandas as pd
-import numpy as np
-import joblib
 
 app = Flask(__name__)
 
-# Load the trained XGBoost model
-model = joblib.load('xgboost_model.pkl')  # Assuming the model is saved as .pkl
+# Load the saved XGBoost model (use the correct model format)
+model = xgb.Booster()
+model.load_model('xgboost_model.json')
 
+# Define the predict route
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get the JSON request data
-    data = request.get_json()
-    input_data = pd.DataFrame([data])
+    try:
+        # Get the input JSON data from the request
+        input_data = request.get_json()
 
-    # Make prediction using the model
-    prediction = model.predict(input_data)
-    return jsonify({'prediction': prediction.tolist()})
+        # Convert the input data into a DataFrame
+        input_df = pd.DataFrame([input_data])
+
+        # Convert DataFrame to DMatrix (XGBoost’s data format)
+        dmatrix = xgb.DMatrix(input_df)
+
+        # Perform prediction
+        prediction = model.predict(dmatrix)
+
+        # Return the prediction as a JSON response
+        return jsonify({'prediction': prediction.tolist()})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
