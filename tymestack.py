@@ -72,9 +72,9 @@ def load_current_best():
 # Load the current best model's metrics
 current_best = load_current_best()
 
-# Begin training and evaluation
-print(torch.cuda.is_available())  # True if GPU is available
-print(torch.cuda.current_device())  # Shows which GPU is being used
+# # Begin training and evaluation
+# print(torch.cuda.is_available())  # True if GPU is available
+# print(torch.cuda.current_device())  # Shows which GPU is being used
 
 # Load the Boston dataset
 data_url = "http://lib.stat.cmu.edu/datasets/boston"
