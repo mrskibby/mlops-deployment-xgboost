@@ -10,6 +10,22 @@ import joblib
 import json
 import os
 
+
+
+
+# Check if GPU is available and proceed accordingly
+if torch.cuda.is_available():
+    print(torch.cuda.current_device())  # Shows which GPU is being used
+    # Create a tensor and move it to GPU
+    device = torch.device("cuda")
+else:
+    print("No GPU found, using CPU.")
+    device = torch.device("cpu")
+
+# Move tensor to the available device (GPU or CPU)
+x = torch.rand(5, 3).to(device)
+print(x)
+
 # Path to store model metadata (in local file or GCS)
 metadata_file = 'best_model_metadata.json'
 
@@ -47,19 +63,6 @@ current_best = load_current_best()
 # Begin training and evaluation
 print(torch.cuda.is_available())  # True if GPU is available
 print(torch.cuda.current_device())  # Shows which GPU is being used
-
-# Check if GPU is available and proceed accordingly
-if torch.cuda.is_available():
-    print(torch.cuda.current_device())  # Shows which GPU is being used
-    # Create a tensor and move it to GPU
-    device = torch.device("cuda")
-else:
-    print("No GPU found, using CPU.")
-    device = torch.device("cpu")
-
-# Move tensor to the available device (GPU or CPU)
-x = torch.rand(5, 3).to(device)
-print(x)
 
 # Load the Boston dataset
 data_url = "http://lib.stat.cmu.edu/datasets/boston"
