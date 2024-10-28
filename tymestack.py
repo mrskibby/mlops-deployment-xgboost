@@ -13,16 +13,16 @@ import os
 
 
 
-# Check if GPU is available and proceed accordingly
+# Check if GPU is available, otherwise use CPU
 if torch.cuda.is_available():
+    print("CUDA is available. Running on GPU...")
     print(torch.cuda.current_device())  # Shows which GPU is being used
-    # Create a tensor and move it to GPU
     device = torch.device("cuda")
 else:
     print("No GPU found, using CPU.")
     device = torch.device("cpu")
 
-# Move tensor to the available device (GPU or CPU)
+# Example tensor to verify device
 x = torch.rand(5, 3).to(device)
 print(x)
 
