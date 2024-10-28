@@ -26,13 +26,17 @@ import os
 # x = torch.rand(5, 3).to(device)
 # print(x)
 
-# Force usage of CPU to avoid CUDA errors in GitHub Actions
-device = torch.device("cpu")
-print("No GPU found, using CPU.")
+# Check if GPU is available and proceed accordingly
+if torch.cuda.is_available():
+    print(torch.cuda.current_device())  # Shows which GPU is being used
+    # Create a tensor and move it to GPU
+    device = torch.device("cuda")
+    print(torch.rand(5, 3).to(device))
+else:
+    print("No GPU found, using CPU.")
+    device = torch.device("cpu")
+    print(torch.rand(5, 3).to(device))
 
-# Example tensor to verify device
-x = torch.rand(5, 3).to(device)
-print(x)
 
 # Path to store model metadata (in local file or GCS)
 metadata_file = 'best_model_metadata.json'
