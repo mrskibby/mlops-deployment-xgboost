@@ -1,6 +1,5 @@
 name: MLOps Deployment
 
-# Trigger the workflow on push or pull requests to the main branch
 on:
   push:
     branches:
@@ -11,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Check out the code
+    # Step 1: Check out the code (updated to v3)
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    # Step 2: Set up Python environment
+    # Step 2: Set up Python environment (updated to v4)
     - name: Set up Python 3.8
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.8'
 
@@ -30,8 +29,7 @@ jobs:
     # Step 4: Run tests (replace with your actual test script)
     - name: Run tests
       run: |
-        python tymestack.py  # Change this to your testing script or command
-        # Add commands to validate the model's performance, e.g., checking MSE or R²
+        python tymestack.py  # Replace this with your actual test script
 
   deploy:
     runs-on: ubuntu-latest
@@ -42,4 +40,3 @@ jobs:
     # Step 5: Deploy the model (replace with actual deployment steps)
     - name: Deploy the model
       run: echo "Deploying model..."  # Replace with your actual deployment steps
-      # You can deploy to a cloud service, or package the model as a Docker container for Kubernetes
