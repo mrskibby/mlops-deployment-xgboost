@@ -6,11 +6,13 @@ from sklearn.metrics import mean_squared_error, r2_score
 import xgboost as xgb
 from sklearn.model_selection import RandomizedSearchCV
 import torch
-print(torch.cuda.is_available())  # True if GPU is available
-print(torch.cuda.current_device())  # Shows which GPU is being used
 
-# Create a tensor and move it to GPU
+
+# Check if a GPU is available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
+
+# Create a tensor and move it to the available device (GPU or CPU)
 x = torch.rand(5, 3).to(device)
 print(x)
 
