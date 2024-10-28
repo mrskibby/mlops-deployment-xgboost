@@ -27,15 +27,15 @@ import os
 # print(x)
 
 # Check if GPU is available and proceed accordingly
-if torch.cuda.is_available():
-    print(torch.cuda.current_device())  # Shows which GPU is being used
-    # Create a tensor and move it to GPU
-    device = torch.device("cuda")
-    print(torch.rand(5, 3).to(device))
-else:
-    print("No GPU found, using CPU.")
-    device = torch.device("cpu")
-    print(torch.rand(5, 3).to(device))
+# if torch.cuda.is_available():
+#     print(torch.cuda.current_device())  # Shows which GPU is being used
+#     # Create a tensor and move it to GPU
+#     device = torch.device("cuda")
+#     print(torch.rand(5, 3).to(device))
+# else:
+#     print("No GPU found, using CPU.")
+#     device = torch.device("cpu")
+#     print(torch.rand(5, 3).to(device))
 
 
 # Path to store model metadata (in local file or GCS)
