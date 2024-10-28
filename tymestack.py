@@ -6,16 +6,47 @@ from sklearn.metrics import mean_squared_error, r2_score
 import xgboost as xgb
 from sklearn.model_selection import RandomizedSearchCV
 import torch
+import joblib
+import json
+import os
 
+# Path to store model metadata (in local file or GCS)
+metadata_file = 'best_model_metadata.json'
 
-# Check if a GPU is available
+# Function to save the new best model
+def save_model(model, mse, r2, model_name):
+    # Save the model to a file
+    joblib.dump(model, f'{model_name}.pkl')
+
+    # Save the new best metrics to metadata
+    metadata = {
+        'best_model_name': model_name,
+        'best_mse': mse,
+        'best_r2': r2
+    }
+    with open(metadata_file, 'w') as f:
+        json.dump(metadata, f)
+
+# Function to load the current best model's performance
+def load_current_best():
+    if os.path.exists(metadata_file):
+        with open(metadata_file, 'r') as f:
+            return json.load(f)
+    else:
+        # If no model is saved yet, return large MSE and low R² to ensure new model is selected
+        return {'best_mse': float('inf'), 'best_r2': float('-inf')}
+
+# Load the current best model's metrics
+current_best = load_current_best()
+
+# Begin training and evaluation
+print(torch.cuda.is_available())  # True if GPU is available
+print(torch.cuda.current_device())  # Shows which GPU is being used
+
+# Create a tensor and move it to GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Using device: {device}")
-
-# Create a tensor and move it to the available device (GPU or CPU)
 x = torch.rand(5, 3).to(device)
 print(x)
-
 
 # Load the Boston dataset
 data_url = "http://lib.stat.cmu.edu/datasets/boston"
@@ -75,7 +106,12 @@ best_r2_xgb = r2_score(y_test, y_pred_best_xgb)
 print(f"Best XGBoost MSE: {best_mse_xgb}")
 print(f"Best XGBoost R²: {best_r2_xgb}")
 
-# Hyperparameter tuning for Random Forest (for testing purposes)
+# Compare the new XGBoost model's performance with the current best model
+if best_mse_xgb < current_best['best_mse']:
+    print(f"New XGBoost model is better. MSE: {best_mse_xgb}, R²: {best_r2_xgb}")
+    save_model(best_xgb_model, best_mse_xgb, best_r2_xgb, 'xgboost_model')
+
+# Hyperparameter tuning for Random Forest (for comparison purposes)
 param_grid_rf = {
     'n_estimators': np.arange(50, 500, 50),
     'max_depth': np.arange(3, 15, 1),
@@ -96,3 +132,8 @@ best_mse_rf = mean_squared_error(y_test, y_pred_best_rf)
 best_r2_rf = r2_score(y_test, y_pred_best_rf)
 print(f"Best Random Forest MSE: {best_mse_rf}")
 print(f"Best Random Forest R²: {best_r2_rf}")
+
+# Compare the new Random Forest model's performance (optional)
+if best_mse_rf < current_best['best_mse']:
+    print(f"New Random Forest model is better. MSE: {best_mse_rf}, R²: {best_r2_rf}")
+    save_model(best_rf_model, best_mse_rf, best_r2_rf, 'random_forest_model')
