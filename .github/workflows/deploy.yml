@@ -17,6 +17,12 @@ jobs:
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
+        export_default_credentials: true
+
+    - name: Authenticate Docker with GCR
+      run: |
+          gcloud auth configure-docker
+      
 
     - name: Build Docker image
       run: |
@@ -33,3 +39,4 @@ jobs:
         --platform managed \
         --region us-central1 \
         --allow-unauthenticated
+
