@@ -18,6 +18,6 @@ ENV FLASK_APP=app.py
 
 # Set environment variable for the port
 ENV PORT=8080
-
+CMD ["python", "app.py"]
 # Run the application and ensure Flask listens on port 8080
 CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
