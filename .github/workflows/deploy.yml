@@ -34,9 +34,5 @@ jobs:
 
     - name: Deploy to Google Cloud Run
       run: |
-        gcloud run deploy xgboost-flask-app \
-        --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/xgboost-flask-app \
-        --platform managed \
-        --region us-central1 \
-        --allow-unauthenticated
+        gcloud run deploy xgboost-flask-app \ --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/xgboost-flask-app \ --platform managed \ --region us-central1 \ --allow-unauthenticated
 
