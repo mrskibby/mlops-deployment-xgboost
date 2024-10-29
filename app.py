@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # Load the saved XGBoost model (use the correct model format)
 model = xgb.Booster()
-model.load_model('xgboost_model.json')
+model.load_model('/app/xgboost_model.json')
 
 # Define the predict route
 @app.route('/predict', methods=['POST'])
