@@ -1,1 +1,1 @@
-{"best_model_name": "random_forest_model", "best_mse": 9.645880881978513, "best_r2": 0.868466067530014}
+{"best_model_name": "xgboost_model", "best_mse": 6.805168819338629, "best_r2": 0.9072028125910113}
