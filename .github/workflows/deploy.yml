@@ -19,13 +19,10 @@ jobs:
         service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
         export_default_credentials: true
 
-    # Authenticate Docker with GCR
     - name: Authenticate Docker with GCR
       run: |
-        echo "${{ secrets.GCLOUD_SERVICE_KEY }}" | docker login -u _json_key --password-stdin https://gcr.io
-
-    - name: Authenticate Docker with GCR
-      run: |
+        echo "${{ secrets.GCLOUD_SERVICE_KEY }}" > key.json
+        gcloud auth activate-service-account --key-file=key.json
         gcloud auth configure-docker
   
     - name: Build Docker image
