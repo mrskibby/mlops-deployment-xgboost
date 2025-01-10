@@ -70,7 +70,8 @@ Cloud Run Deployment:
 
 API URL and Body
 
-URL: https://xgboost-flask-app-634631521378.us-central1.run.app
+URL: https://xgboost-flask-app-634631521378.us-central1.run.app/predict
+
 request: POST
 Body: JSON (raw)
 {

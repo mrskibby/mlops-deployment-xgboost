@@ -50,7 +50,7 @@ print(f"Best Hyperparameters: {best_trial.parameters}")
 print(f"Best MSE: {best_trial.final_measurement.metrics['neg_mean_squared_error']}")
 
 # After identifying the best model, deploy it
-best_model_image = "gcr.io/your-project-id/xgboost-flask-app"
+best_model_image = "gcr.io/mlops-flask-app/xgboost-flask-app"
 
 # Deploy to Cloud Run
 aiplatform.Model.upload(

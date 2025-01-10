@@ -39,4 +39,4 @@ jobs:
     steps:
     # Step 5: Deploy the model (replace with actual deployment steps)
     - name: Deploy the model
-      run: echo "Deploying model..."  # Replace with your actual deployment steps
+      run: echo "Deploying model on server https://xgboost-flask-app-634631521378.us-central1.run.app"
